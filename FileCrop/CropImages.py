@@ -21,17 +21,17 @@ def symbolCrop(fname):
         im_crop.save(fp=f"{outputDir}/symbol.{fname}.png")
 
 
-def cropFullCard(fname):
+def cropFullCard(fname, objname):
     with Image.open(f"{inputDir}/{fname}") as im:
         x, y = 36, 36
         x2, y2 = 646, 1014
         im_crop = im.crop(box=(x, y, x2, y2))
 
-
         filename_w_ext = os.path.basename(fname)
         name, _ = os.path.splitext(filename_w_ext)
+        scenarionumber = name[0]
 
-        im_crop.save(fp=f"{outputDir}/obj_{name}.png")
+        im_crop.save(fp=f"{outputDir}/obj_{scenarionumber}{objname}.png")
 
 
 def symbolNextCrop(fname):
@@ -71,11 +71,16 @@ outputDir = "./output"
 
 c = 1
 
-for filename in os.listdir(inputDir):
+# obj_{N}{L|LL}_f.png
+objnames = ['A_f', 'A_b', 'AA_f', 'AA_b',
+            'B_f', 'B_b', 'BB_f', 'BB_b',
+            'C_f', 'C_b', 'CC_f', 'CC_b']
+
+for i, filename in enumerate(os.listdir(inputDir)):
     #numberCrop(filename, c)
     # symbolCrop(filename)
     # symbolNextCrop(filename)
 
-    cropFullCard(filename)
+    cropFullCard(filename, objname=objnames[i % len(objnames)])
 
     c += 1
