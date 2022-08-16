@@ -1,3 +1,5 @@
+from msilib.schema import File
+from tabnanny import filename_only
 from PIL import Image, ImageDraw
 import numpy
 import os
@@ -33,6 +35,12 @@ def cropFullCard(fname, objname):
 
         im_crop.save(fp=f"{outputDir}/obj_{scenarionumber}{objname}.png")
 
+def convertToJpeg(fname):
+    with Image.open(f"{inputDir}/{fname}") as im:
+        filename_w_ext = os.path.basename(fname)
+        name, _ = os.path.splitext(filename_w_ext)
+
+        im.save(fp=f"{outputDir}/{name}.jpg")
 
 def symbolNextCrop(fname):
     with Image.open(f"{inputDir}/{fname}").convert("RGBA") as im:
@@ -66,8 +74,8 @@ def symbolNextCrop(fname):
         newIm.save(fp=f"{outputDir}/nextSymbol.{fname}.png")
 
 
-inputDir = "./input/Objetivos"
-outputDir = "./output"
+inputDir = "./FileCrop/input/png"
+outputDir = "./FileCrop/output"
 
 c = 1
 
@@ -81,6 +89,9 @@ for i, filename in enumerate(os.listdir(inputDir)):
     # symbolCrop(filename)
     # symbolNextCrop(filename)
 
-    cropFullCard(filename, objname=objnames[i % len(objnames)])
+    #cropFullCard(filename, objname=objnames[i % len(objnames)])
+
+    if filename.endswith("png") and "esq" not in filename:
+        convertToJpeg(filename)
 
     c += 1
